@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="داشبورد تحلیل پیشرفته سئو برای تحلیل کلمات کلیدی، Google Search Console، ساختار صفحات و شکاف محتوایی رقبا.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#6366f1">
+    <title>داشبورد تحلیل پیشرفته سئو برای تحلیل کلمات کلیدی</title>
+    <style>
+        /* Import Vazirmatn Font */
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap');
+
+        :root {
+            /* Pastel Palette */
+            --bg-main: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-neutral-light: #f1f5f9;
+            --border-subtle: #e2e8f0;
+            --border-active: #818cf8;
+            
+            --text-heading: #1e1b4b;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            
+            --primary: #6366f1;
+            --primary-light: #e0e7ff;
+            --primary-hover: #4f46e5;
+            
+            --accent-emerald: #059669;
+            --accent-emerald-bg: #d1fae5;
+            --accent-amber: #d97706;
+            --accent-amber-bg: #fef3c7;
+            --accent-rose: #e11d48;
+            --accent-rose-bg: #ffe4e6;
+            --accent-sky: #0284c7;
+            --accent-sky-bg: #e0f2fe;
+            --accent-purple: #7c3aed;
+            --accent-purple-bg: #f3e8ff;
+
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 8px;
+            --shadow-md: 0 1px 3px rgba(15, 23, 42, 0.06);
+            --transition-smooth: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', 'Vazir', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Tahoma, sans-serif;
+            font-size: 16px;
+            background-color: var(--bg-main);
+            color: var(--text-body);
+            margin: 0;
+            padding: 2rem 1.5rem;
+            direction: rtl;
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 1650px; 
+            margin: 0 auto; 
+        }
+
+        header { 
+            text-align: center; 
+            margin-bottom: 2.5rem; 
+        }
+
+        h1 { 
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem); 
+            font-weight: 800; 
+            color: var(--text-heading); 
+            margin: 0 0 0.75rem 0; 
+        }
+
+        .subtitle { 
+            color: var(--text-muted); 
+            font-size: clamp(0.9rem, 1.8vw, 1.05rem); 
+            margin: 0; 
+            font-weight: 500;
+        }
+
+        h2 { 
+            font-size: clamp(1.15rem, 2.2vw, 1.45rem); 
+            font-weight: 800; 
+            color: var(--text-heading); 
+            margin: 2rem 0 1.25rem 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.75rem; 
+        }
+
+        h2::before { 
+            content: ''; 
+            width: 6px; 
+            height: 1.5rem; 
+            background-color: var(--primary); 
+            border-radius: var(--radius-sm); 
+            flex-shrink: 0;
+        }
+
+        .card { 
+            background-color: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-lg); 
+            padding: 2rem; 
+            margin-bottom: 2rem; 
+            box-shadow: var(--shadow-md); 
+            position: relative;
+        }
+
+        .seo-tag { 
+            display: inline-block; 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            padding: 0.2rem 0.5rem; 
+            border-radius: var(--radius-sm); 
+            margin-right: 0.35rem; 
+            font-family: monospace; 
+            vertical-align: middle; 
+        }
+
+        .seo-tag.t { background-color: var(--bg-neutral-light); color: var(--accent-sky); border: 1px solid var(--border-subtle); }
+        .seo-tag.h1 { background-color: var(--bg-neutral-light); color: var(--accent-emerald); border: 1px solid var(--border-subtle); }
+        .seo-tag.md { background-color: var(--bg-neutral-light); color: var(--accent-purple); border: 1px solid var(--border-subtle); }
+
+        /* Hierarchical heading outline (H1-H6 nested inside one matrix cell) */
+        .heading-outline-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            text-align: right;
+        }
+
+        .heading-outline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .heading-outline-text {
+            color: var(--text-body);
+        }
+
+        .heading-level-tag {
+            flex-shrink: 0;
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 800;
+            font-family: monospace;
+            padding: 0.1rem 0.4rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            background-color: var(--bg-neutral-light);
+        }
+
+        .heading-level-tag.h1 { color: var(--accent-emerald); }
+        .heading-level-tag.h2 { color: var(--accent-sky); }
+        .heading-level-tag.h3 { color: var(--accent-purple); }
+        .heading-level-tag.h4 { color: var(--accent-amber); }
+        .heading-level-tag.h5 { color: var(--accent-rose); }
+        .heading-level-tag.h6 { color: var(--text-muted); }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 6px;
+            margin: 2px;
+            letter-spacing: 0.2px;
+        }
+
+        .badge-target { background-color: var(--bg-neutral-light); color: #6b21a8; border: 1px solid var(--border-subtle); }
+        .badge-kr { background-color: var(--bg-neutral-light); color: #1e40af; border: 1px solid var(--border-subtle); }
+        .badge-gsc { background-color: var(--bg-neutral-light); color: #5b21b6; border: 1px solid var(--border-subtle); }
+        .badge-c1, .badge-c2, .badge-c3, .badge-c4, .badge-c5 { background-color: var(--bg-neutral-light); color: #9d174d; border: 1px solid var(--border-subtle); }
+        .badge-pasf { background-color: var(--bg-neutral-light); color: #115e59; border: 1px solid var(--border-subtle); }
+        .badge-paaf { background-color: var(--bg-neutral-light); color: #9a3412; border: 1px solid var(--border-subtle); }
+
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+
+        .dashboard-grid > .control-group { min-width: 0; }
+        .target-control { grid-column: 1 / -1; }
+
+        .control-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 0.6rem; 
+        }
+
+        label { 
+            font-size: 0.92rem; 
+            font-weight: 700; 
+            color: var(--text-heading); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            gap: 0.4rem; 
+            flex-wrap: wrap;
+        }
+
+        textarea, input[type="text"], input[type="file"] { 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+
+        textarea { 
+            padding: 0.85rem 1.1rem; 
+            background-color: #ffffff; 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-md); 
+            color: var(--text-heading); 
+            font-size: 0.92rem; 
+            direction: ltr; 
+            font-family: monospace; 
+            height: 120px; 
+            resize: vertical; 
+            transition: var(--transition-smooth);
+        }
+
+        input[type="text"] { 
+            padding: 0.75rem 1rem; 
+            background-color: #ffffff; 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-md); 
+            color: var(--text-heading); 
+            font-size: 0.92rem; 
+            transition: var(--transition-smooth);
+        }
+
+        textarea:focus, input[type="text"]:focus { 
+            background-color: #ffffff; 
+            border-color: var(--border-active); 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); 
+        }
+
+        input[type="file"] { 
+            padding: 0.75rem; 
+            background-color: #ffffff; 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-md); 
+            font-size: 0.88rem; 
+            cursor: pointer; 
+            color: var(--text-body); 
+        }
+
+        .section-badge { 
+            background: var(--bg-neutral-light); 
+            border: 1px solid var(--border-subtle);
+            padding: 0.25rem 0.65rem; 
+            border-radius: var(--radius-sm); 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            color: var(--accent-sky); 
+        }
+
+        .action-buttons { 
+            display: flex; 
+            gap: 1rem; 
+            margin-top: 1.5rem; 
+            flex-wrap: wrap;
+        }
+
+        button { 
+            flex: 1; 
+            min-width: 240px;
+            background: var(--primary); 
+            color: #ffffff; 
+            padding: 1rem 2rem; 
+            border: none; 
+            border-radius: var(--radius-md); 
+            font-size: 1.05rem; 
+            cursor: pointer; 
+            font-weight: 700; 
+            transition: var(--transition-smooth); 
+            touch-action: manipulation;
+        }
+
+        button:hover { 
+            background: var(--primary-hover); 
+        }
+
+        button:disabled { 
+            background: #e2e8f0; 
+            color: #94a3b8; 
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none; 
+            opacity: 0.7;
+        }
+
+        .gap-search-container {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .gap-search-input {
+            flex: 1;
+            border: 1px solid var(--border-subtle) !important;
+            padding: 0.6rem 0.85rem !important;
+            font-size: 0.88rem !important;
+            border-radius: var(--radius-sm) !important;
+        }
+
+        .status-bar { 
+            margin-top: 1.5rem; 
+            padding: 1rem; 
+            border-radius: var(--radius-md); 
+            background-color: var(--accent-amber-bg); 
+            border: 1px solid #fde68a; 
+            color: #92400e; 
+            text-align: center; 
+            font-weight: 700; 
+            display: none; 
+        }
+
+        .status-bar.error { 
+            background-color: var(--accent-rose-bg); 
+            border-color: #fca5a5; 
+            color: #991b1b; 
+        }
+
+        .status-bar.success { 
+            background-color: var(--accent-emerald-bg); 
+            border-color: #a7f3d0; 
+            color: #065f46; 
+        }
+
+        .mega-table-wrapper { 
+            width: 100%; 
+            overflow-x: auto; 
+            margin: 1.5rem 0; 
+            background-color: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-md); 
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .mega-table-wrapper table { 
+            width: 100%; 
+            min-width: 900px; 
+            border-collapse: separate; 
+            border-spacing: 0; 
+            font-size: 0.9rem; 
+            table-layout: fixed; 
+        }
+
+        .mega-table-wrapper th, .mega-table-wrapper td { 
+            padding: 1.1rem 1.2rem; 
+            border-bottom: 1px solid var(--border-subtle); 
+            border-left: 1px solid var(--border-subtle); 
+            vertical-align: top; 
+            text-align: right; 
+            word-wrap: break-word; 
+            color: var(--text-body); 
+        }
+
+        .mega-table-wrapper td.feature-label { 
+            background-color: #f8fafc !important; 
+            color: var(--text-heading); 
+            font-weight: 800; 
+            text-align: center; 
+            vertical-align: middle; 
+            width: 190px; 
+            position: sticky; 
+            right: 0; 
+            z-index: 10; 
+            border-left: 2px solid var(--border-subtle); 
+        }
+
+        .mega-table-wrapper th.feature-corner { 
+            background-color: #f1f5f9 !important; 
+            color: var(--text-heading); 
+            font-weight: 900; 
+            width: 190px; 
+            position: sticky; 
+            right: 0; 
+            top: 0; 
+            z-index: 12; 
+            text-align: center; 
+            border-left: 2px solid var(--border-subtle); 
+        }
+
+        .mega-table-wrapper th.source-column-header { 
+            background-color: #f8fafc !important; 
+            color: var(--text-heading); 
+            font-weight: 800; 
+            text-align: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 8; 
+        }
+
+        .phrase-scroll-box {
+            max-height: 260px;
+            overflow-y: auto;
+            padding-inline-end: 0.3rem;
+        }
+
+        .phrase-item { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            background-color: var(--bg-neutral-light); 
+            border: 1px solid var(--border-subtle); 
+            padding: 0.5rem 0.8rem; 
+            border-radius: var(--radius-sm); 
+            margin-bottom: 0.5rem; 
+            font-size: 0.88rem; 
+            gap: 0.5rem;
+        }
+
+        .phrase-wrapper { 
+            display: flex; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 0.35rem; 
+        }
+
+        .phrase-text { 
+            color: var(--text-heading); 
+            font-weight: 700; 
+        }
+
+        .count-badge { 
+            font-size: 0.78rem; 
+            font-weight: 700; 
+            color: var(--accent-emerald); 
+            background-color: var(--bg-neutral-light); 
+            border: 1px solid var(--border-subtle);
+            padding: 0.2rem 0.5rem; 
+            border-radius: var(--radius-sm); 
+            white-space: nowrap;
+        }
+        
+        /* Read-More Component */
+        .read-more-container { 
+            position: relative; 
+            width: 100%;
+            background-color: transparent;
+        }
+
+        .read-more-content {
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .read-more-content.collapsed { 
+            max-height: 140px !important; 
+            overflow: hidden !important; 
+            mask-image: linear-gradient(to bottom, #000 40%, transparent 100%) !important; 
+            -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent 100%) !important; 
+        }
+
+        .read-more-content:not(.collapsed) {
+            max-height: none !important;
+            overflow: visible !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+        }
+
+        .read-more-btn { 
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0.45rem 1.25rem; 
+            margin-top: 0.75rem; 
+            background: var(--primary); 
+            color: #ffffff; 
+            border: none; 
+            border-radius: var(--radius-sm); 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: var(--transition-smooth); 
+            touch-action: manipulation;
+            width: auto;
+        }
+
+        .read-more-btn:hover { 
+            background: var(--primary-hover); 
+        }
+
+        /* SCROLLABLE BOX UTILITY STYLES */
+        .scrollable-table-box {
+            max-height: 380px;
+            overflow-y: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+        }
+
+        .scrollable-kw-list {
+            max-height: 420px;
+            overflow-y: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0.5rem;
+            background: var(--bg-surface);
+        }
+
+        .scrollable-box-5items {
+            max-height: 360px;
+            overflow-y: auto;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            background: var(--bg-surface);
+        }
+
+        .anchor-preview-box { 
+            background-color: #f8fafc; 
+            border: 1px solid var(--border-subtle); 
+            padding: 0.85rem; 
+            border-radius: var(--radius-md); 
+            font-size: 0.88rem; 
+            color: var(--accent-sky); 
+            line-height: 1.9; 
+        }
+
+        .anchor-preview-line { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.4rem; 
+            padding: 0.2rem 0; 
+            border-bottom: 1px dashed var(--border-subtle); 
+        }
+
+        .anchor-preview-line:last-child {
+            border-bottom: none;
+        }
+        
+        .filter-notice { 
+            font-size: 0.9rem; 
+            color: var(--text-body); 
+            background-color: var(--bg-neutral-light); 
+            border: 1px solid var(--border-subtle); 
+            border-right: 3px solid var(--accent-emerald);
+            padding: 0.85rem 1.25rem; 
+            border-radius: var(--radius-md); 
+            margin-bottom: 1.5rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 0.6rem; 
+        }
+
+        .table-responsive { 
+            width: 100%; 
+            margin: 1rem 0; 
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-responsive table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+
+        .table-responsive th { 
+            background-color: var(--bg-neutral-light); 
+            color: var(--text-heading); 
+            padding: 1rem; 
+            border-bottom: 2px solid var(--border-subtle); 
+            text-align: right; 
+            font-weight: 800;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .table-responsive td { 
+            padding: 1rem; 
+            border-bottom: 1px solid var(--border-subtle); 
+            text-align: right; 
+            color: var(--text-body); 
+        }
+
+        ul { 
+            margin: 0; 
+            padding-right: 1.2rem; 
+        }
+
+        li { 
+            margin-bottom: 0.35rem; 
+        }
+
+        .ai-badge { 
+            background: var(--primary); 
+            color: #ffffff; 
+            padding: 0.25rem 0.65rem; 
+            border-radius: var(--radius-sm); 
+            font-size: 0.78rem; 
+            font-weight: 700; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.3rem; 
+        }
+        
+        .target-kw-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            gap: 0.75rem; 
+        }
+        
+        .suggested-kw-card { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-top: 3px solid var(--accent-emerald);
+            border-radius: var(--radius-md); 
+            padding: 1.25rem; 
+            margin-top: 1.5rem; 
+        }
+
+        .gap-kw-card { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-top: 3px solid var(--accent-amber);
+            border-radius: var(--radius-md); 
+            padding: 1.25rem; 
+            margin-top: 1.5rem; 
+        }
+
+        .suggested-kw-list { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 0.85rem; 
+            margin-top: 1rem; 
+        }
+
+        .suggested-kw-item { 
+            background: var(--bg-neutral-light); 
+            border: 1px solid var(--border-subtle); 
+            padding: 0.75rem 1rem; 
+            border-radius: var(--radius-sm); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            color: var(--text-heading); 
+        }
+
+        .suggested-score { 
+            background: var(--bg-surface); 
+            color: var(--accent-sky); 
+            border: 1px solid var(--border-subtle);
+            font-size: 0.75rem; 
+            padding: 0.2rem 0.5rem; 
+            border-radius: var(--radius-sm); 
+            font-family: monospace; 
+            font-weight: 700;
+        }
+
+        .gap-score { 
+            background: var(--bg-surface); 
+            color: var(--accent-amber); 
+            border: 1px solid var(--border-subtle);
+            font-size: 0.75rem; 
+            padding: 0.2rem 0.5rem; 
+            border-radius: var(--radius-sm); 
+            font-family: monospace; 
+            font-weight: 700;
+        }
+
+        .comp-gap-score { 
+            background: var(--bg-surface); 
+            color: var(--accent-amber); 
+            border: 1px solid var(--border-subtle);
+            font-size: 0.75rem; 
+            padding: 0.15rem 0.45rem; 
+            border-radius: var(--radius-sm); 
+            font-family: monospace; 
+            margin-right: 0.4rem; 
+            font-weight: 700;
+        }
+
+        @media (max-width: 991px) {
+            body { padding: 1.25rem 0.75rem; }
+            .card { padding: 1.25rem; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .action-buttons { flex-direction: column; }
+            button { width: 100%; min-width: 0; }
+            .suggested-kw-list { grid-template-columns: 1fr; }
+            .card > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.1rem; }
+            .card { padding: 1rem; border-radius: var(--radius-md); }
+            textarea { height: 100px; }
+            .table-responsive th, .table-responsive td { padding: 0.75rem 0.5rem; font-size: 0.82rem; }
+        }
+
+        button:focus-visible, input:focus-visible, textarea:focus-visible {
+            outline: 3px solid #818cf8;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>داشبورد تحلیل پیشرفته سئو برای تحلیل کلمات کلیدی</h1>
+    </header>
+    
+    <div class="card">
+       
+
+        <div class="dashboard-grid">
+            <div class="control-group">
+                <label>۱. لیست تحقیق کلمات کلیدی (Keyword Research)<span class="section-badge">متن خام</span></label>
+                <textarea aria-label="لیست تحقیق کلمات کلیدی" id="kw-input" placeholder="هر کلمه یا عبارت را در یک خط وارد کنید (پشتیبانی تا ده‌ها هزار کلمه)..."></textarea>
+            </div>
+
+            <div class="control-group">
+                <label>۲. گزارش گوگل سرچ کنسول (GSC CSV File)<span class="section-badge">آپلود فایل CSV (اختیاری)</span></label>
+                <input aria-label="فایل CSV گوگل سرچ کنسول" type="file" id="gsc-file-input" accept=".csv">
+            </div>
+
+            <div class="control-group">
+                <label>۳. صفحه وب خودی (Our Webpage / Text Body)<span class="section-badge" style="background:var(--accent-emerald-bg); color:var(--accent-emerald);">اصلی</span></label>
+                <textarea id="our-html-input" placeholder="کد HTML یا متن بدنه صفحه خودی را اینجا وارد کنید..."></textarea>
+            </div>
+
+            <div class="control-group">
+                <label>۴.۱. رقیب اول SERP</label>
+                <textarea class="comp-html-input" placeholder="کد سورس صفحات رقیب را وارد کنید (ctrl+U سپس ctrl+A و بعد کپی و در این قسمت پیست شود)"></textarea>
+            </div>
+            <div class="control-group">
+                <label>۴.۲. رقیب دوم SERP</label>
+                <textarea class="comp-html-input" placeholder="کد سورس صفحات رقیب را وارد کنید (ctrl+U سپس ctrl+A و بعد کپی و در این قسمت پیست شود)"></textarea>
+            </div>
+            <div class="control-group">
+                <label>۴.۳. رقیب سوم SERP</label>
+                <textarea class="comp-html-input" placeholder="کد سورس صفحات رقیب را وارد کنید (ctrl+U سپس ctrl+A و بعد کپی و در این قسمت پیست شود)"></textarea>
+            </div>
+            <div class="control-group">
+                <label>۴.۴. رقیب چهارم SERP</label>
+                <textarea class="comp-html-input" placeholder="کد سورس صفحات رقیب را وارد کنید (ctrl+U سپس ctrl+A و بعد کپی و در این قسمت پیست شود)"></textarea>
+            </div>
+            <div class="control-group">
+                <label>۴.۵. رقیب پنجم SERP</label>
+                <textarea class="comp-html-input" placeholder="کد سورس صفحات رقیب را وارد کنید (ctrl+U سپس ctrl+A و بعد کپی و در این قسمت پیست شود)"></textarea>
+            </div>
+
+            <div class="control-group">
+                <label>۵. جستجوهای مرتبط (PASF)<span class="section-badge">محتوا</span></label>
+                <textarea id="pasf-input" placeholder="عبارات PASF، در هر خط 1 عبارت وارد کنید"></textarea>
+            </div>
+            <div class="control-group">
+                <label>۶. سوالات پرتکرار کاربران (PAAF)<span class="section-badge">FAQ</span></label>
+                <textarea id="paaf-input" placeholder="سوالات PAA، در هر خط 1 سوال وارد کنید"></textarea>
+            </div>
+
+            <div class="control-group target-control" style="background: var(--bg-neutral-light); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                <label style="color: var(--primary); font-size: 1rem; margin-bottom: 0.5rem;">
+                    ۷. کوئری‌های استراتژیک هدف (۱ اصلی Seed + ۳ لانگ‌تیل Long-tail)
+                    <span class="section-badge" style="background:#ffffff; color:var(--primary);">مبنای مقایسه</span>
+                </label>
+                <div class="target-kw-grid">
+                    <input type="text" id="seed-target-kw" placeholder="🌱 ۱. کلمه کلیدی اصلی (Seed Query) - مثلا: دکتری روانشناسی تربیتی">
+                    <input type="text" id="longtail-target-1" placeholder="🌿 ۲. کلمه لانگ‌تیل اول - مثلا: منابع آزمون دکتری روانشناسی تربیتی">
+                    <input type="text" id="longtail-target-2" placeholder="🌿 ۳. کلمه لانگ‌تیل دوم - مثلا: گرایش‌های دکتری روانشناسی تربیتی">
+                    <input type="text" id="longtail-target-3" placeholder="🌿 ۴. کلمه لانگ‌تیل سوم - مثلا: مشاوره کنکور دکتری روانشناسی تربیتی">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="button" id="start-btn" onclick="triggerUnifiedExtractionWorkflow()">شروع تحلیل پیشرفته ماتریس سئو</button>
+        </div>
+        <div id="status-output" class="status-bar"></div>
+    </div>
+
+    <!-- ORDERED SECTIONS -->
+    <div id="gsc-section"></div>
+    <div id="suggested-keywords-section"></div>
+    <div id="gap-analysis-section"></div>
+    <div id="url-matrix-section"></div>
+    <div id="phrase-results-section"></div>
+    <div id="intent-section"></div>
+    <div id="detailed-gaps-section"></div>
+</div>
+
+<script>
+let parsedSourcesMemory = [];
+let globalPerSourcePhrases = {};
+let parsedGscData = [];
+let targetKeywordsList = [];
+let pasfList = [];
+let paafList = [];
+let ourWebpageData = null;
+let competitorSources = [];
+
+let targetKeywordsNormalizedSet = new Set();
+let targetKeywordsNormalizedList = [];
+let gscQueriesMap = new Map();
+let pasfNormalizedList = [];
+let paafNormalizedList = [];
+
+let rawCalculatedOurGaps = [];
+let rawCalculatedCompGapsList = []; // [{ containerId, countId, wrapperId, gaps: [...] }]
+
+function normalizeText(value = "") {
+    return String(value)
+        .normalize("NFKC")
+        .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "")
+        .replace(/\u0640/g, "")
+        .replace(/ي/g, "ی")
+        .replace(/ك/g, "ک")
+        // نیم‌فاصله (ZWNJ) در فارسی نقش معنایی دارد و نباید مثل یک فاصلهٔ
+        // معمولی در نظر گرفته شود — «می‌شود» (با نیم‌فاصله) با «می شود»
+        // (با فاصلهٔ واقعی) یکی نیستند و نباید هم‌ارز شمرده شوند. بنابراین
+        // دیگر نیم‌فاصله را به space تبدیل نمی‌کنیم؛ فقط موارد نادرست/زائد
+        // آن را پاک‌سازی می‌کنیم: نیم‌فاصله‌های پشت‌سرهم (خطای تایپی) را به
+        // یک نیم‌فاصله فشرده می‌کنیم، و نیم‌فاصلهٔ بی‌معنای چسبیده به یک
+        // فاصلهٔ واقعی یا در ابتدا/انتهای متن را حذف می‌کنیم.
+        .replace(/\u200c{2,}/g, "\u200c")
+        .replace(/\u200c(?=\s)|(?<=\s)\u200c/g, "")
+        .replace(/^\u200c+|\u200c+$/g, "")
+        .replace(/([\u0600-\u06FF])([A-Za-z0-9])/g, "$1 $2")
+        .replace(/([A-Za-z0-9])([\u0600-\u06FF])/g, "$1 $2")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+}
+
+function escapeHtml(value = "") {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function tokenizeText(text = "") {
+    const normalized = normalizeText(text);
+    // فارسی و لاتین باید حتی در صورت چسبیدن به هم نیز توکن‌های جدا باشند؛
+    // بنابراین «سئوSEO» به دو کلمه «سئو» و «seo» تبدیل می‌شود، نه یک توکن مشترک.
+    return normalized.match(/[\u0600-\u06FF\u200C]+|[a-zA-Z0-9]+/g) || [];
+}
+
+function yieldToMain() {
+    return new Promise(resolve => setTimeout(resolve, 0));
+}
+
+function csvToRows(text) {
+    const rows = [];
+    let row = [];
+    let cell = "";
+    let quoted = false;
+
+    for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        const next = text[i + 1];
+
+        if (ch === '"') {
+            if (quoted && next === '"') {
+                cell += '"';
+                i++;
+            } else {
+                quoted = !quoted;
+            }
+        } else if ((ch === "," || ch === "\t" || ch === ";") && !quoted) {
+            row.push(cell);
+            cell = "";
+        } else if ((ch === "\n" || ch === "\r") && !quoted) {
+            if (ch === "\r" && next === "\n") i++;
+            row.push(cell);
+            if (row.some(v => String(v).trim() !== "")) rows.push(row);
+            row = [];
+            cell = "";
+        } else {
+            cell += ch;
+        }
+    }
+
+    if (cell !== "" || row.length) {
+        row.push(cell);
+        if (row.some(v => String(v).trim() !== "")) rows.push(row);
+    }
+    return rows;
+}
+
+function parseNumber(value) {
+    const normalized = String(value ?? "")
+        .trim()
+        .replace(/[%\s]/g, "")
+        .replace(/,/g, "");
+    const n = Number.parseFloat(normalized);
+    return Number.isFinite(n) ? n : 0;
+}
+
+function findHeaderIndex(headers, names) {
+    const normalizedHeaders = headers.map(normalizeText);
+    return names.reduce((found, name) => {
+        if (found !== -1) return found;
+        const target = normalizeText(name);
+        return normalizedHeaders.findIndex(h => h === target || h.includes(target));
+    }, -1);
+}
+
+function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = e => reject(e);
+        reader.readAsText(file, 'UTF-8');
+    });
+}
+
+function toggleReadMore(btn) {
+    const content = btn.previousElementSibling;
+    const isCollapsed = content.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        content.classList.remove('collapsed');
+        btn.innerText = 'بستن 🔼';
+        btn.setAttribute('aria-expanded', 'true');
+    } else {
+        content.classList.add('collapsed');
+        btn.innerText = 'مشاهده بیشتر... 🔽';
+        btn.setAttribute('aria-expanded', 'false');
+    }
+}
+
+async function triggerUnifiedExtractionWorkflow() {
+    const statusDiv = document.getElementById('status-output');
+    statusDiv.style.display = "block";
+    statusDiv.className = "status-bar";
+    statusDiv.innerText = "⏳ در حال آماده‌سازی داده‌ها...";
+    const startBtn = document.getElementById("start-btn");
+    startBtn.disabled = true;
+
+    await yieldToMain();
+
+    try {
+        const gscSection = document.getElementById('gsc-section');
+        const suggestedKwSection = document.getElementById('suggested-keywords-section');
+        const gapSection = document.getElementById('gap-analysis-section');
+        const urlMatrixSection = document.getElementById('url-matrix-section');
+        const phraseResultsSection = document.getElementById('phrase-results-section');
+        const intentSection = document.getElementById('intent-section');
+        const detailedGapsSection = document.getElementById('detailed-gaps-section');
+
+        gscSection.innerHTML = "";
+        suggestedKwSection.innerHTML = "";
+        gapSection.innerHTML = "";
+        urlMatrixSection.innerHTML = "";
+        phraseResultsSection.innerHTML = "";
+        intentSection.innerHTML = "";
+        detailedGapsSection.innerHTML = "";
+
+        parsedSourcesMemory = [];
+        globalPerSourcePhrases = {};
+        competitorSources = [];
+        parsedGscData = [];
+
+        statusDiv.innerText = "⏳ در حال ایندکس‌گذاری کلمات کلیدی...";
+        await yieldToMain();
+        
+        const kwRaw = document.getElementById('kw-input').value.trim();
+        targetKeywordsList = kwRaw ? [...new Set(kwRaw.split(/\r?\n/).map(k => k.trim()).filter(Boolean))] : [];
+        
+        targetKeywordsNormalizedSet = new Set();
+        targetKeywordsNormalizedList = [];
+        targetKeywordsList.forEach(k => {
+            const norm = normalizeText(k);
+            if (norm) {
+                targetKeywordsNormalizedSet.add(norm);
+                targetKeywordsNormalizedList.push({ original: k, norm });
+            }
+        });
+
+        const gscFileInput = document.getElementById('gsc-file-input');
+        if (gscFileInput.files && gscFileInput.files[0]) {
+            statusDiv.innerText = "⏳ در حال پردازش فایل سرچ کنسول...";
+            await yieldToMain();
+            try {
+                const gscRaw = await readFileAsText(gscFileInput.files[0]);
+                const rows = csvToRows(gscRaw.replace(/^\uFEFF/, ""));
+                if (rows.length) {
+                    const headers = rows[0];
+                    const queryIndex = findHeaderIndex(headers, ["query", "کوئری", "عبارت جستجو"]);
+                    const clicksIndex = findHeaderIndex(headers, ["clicks", "کلیک"]);
+                    const impressionsIndex = findHeaderIndex(headers, ["impressions", "نمایش"]);
+                    const ctrIndex = findHeaderIndex(headers, ["ctr", "نرخ کلیک"]);
+                    const positionIndex = findHeaderIndex(headers, ["position", "موقعیت", "رتبه"]);
+
+                    const hasHeader = queryIndex !== -1;
+                    const startIndex = hasHeader ? 1 : 0;
+                    const qIdx = hasHeader ? queryIndex : 0;
+                    const cIdx = hasHeader ? clicksIndex : 1;
+                    const iIdx = hasHeader ? impressionsIndex : 2;
+                    const ctrIdx = hasHeader ? ctrIndex : 3;
+                    const pIdx = hasHeader ? positionIndex : 4;
+
+                    for (let i = startIndex; i < rows.length; i++) {
+                        const parts = rows[i];
+                        if (!parts.length || !String(parts[qIdx] ?? "").trim()) continue;
+                        const qStr = String(parts[qIdx] ?? "").trim();
+                        parsedGscData.push({
+                            query: qStr,
+                            normQuery: normalizeText(qStr),
+                            clicks: parseNumber(parts[cIdx]),
+                            impressions: parseNumber(parts[iIdx]),
+                            ctr: String(parts[ctrIdx] ?? "-").trim() || "-",
+                            position: parseNumber(parts[pIdx])
+                        });
+                    }
+                }
+            } catch (err) {
+                console.warn("خطا در خواندن فایل GSC:", err);
+            }
+        }
+
+        gscQueriesMap.clear();
+        parsedGscData.forEach(g => {
+            if (!gscQueriesMap.has(g.normQuery)) gscQueriesMap.set(g.normQuery, []);
+            gscQueriesMap.get(g.normQuery).push(g);
+        });
+
+        statusDiv.innerText = "⏳ در حال استخراج محتوای صفحه خودی...";
+        await yieldToMain();
+        const ourInput = document.getElementById('our-html-input').value.trim();
+        if (ourInput) {
+            ourWebpageData = parseOurPageContent(ourInput);
+            parsedSourcesMemory.push(ourWebpageData);
+            globalPerSourcePhrases["صفحه وب خودی (Our Page)"] = ourWebpageData.fullCombinedText;
+        } else {
+            ourWebpageData = null;
+        }
+
+        statusDiv.innerText = "⏳ در حال استخراج ساختار صفحات رقبا...";
+        await yieldToMain();
+        document.querySelectorAll('.comp-html-input').forEach((input, index) => {
+            const htmlText = input.value.trim();
+            if (htmlText) {
+                const fallbackLabel = `رقیب شماره ${index + 1} SERP`;
+                const compObj = parseHtmlDocument(fallbackLabel, htmlText);
+                // اگر دامنه به‌صورت خودکار از کد HTML تشخیص داده شده باشد، همان را جایگزین عنوان عمومی می‌کنیم
+                if (compObj.domain) {
+                    compObj.label = `رقیب ${index + 1}: ${compObj.domain}`;
+                }
+                competitorSources.push(compObj);
+                parsedSourcesMemory.push(compObj);
+                globalPerSourcePhrases[compObj.label] = compObj.fullCombinedText;
+            }
+        });
+
+        pasfList = document.getElementById('pasf-input').value.split(/\r?\n/).map(p => p.trim()).filter(Boolean);
+        paafList = document.getElementById('paaf-input').value.split(/\r?\n/).map(p => p.trim()).filter(Boolean);
+        
+        pasfNormalizedList = pasfList.map(p => ({ original: p, norm: normalizeText(p) }));
+        paafNormalizedList = paafList.map(p => ({ original: p, norm: normalizeText(p) }));
+
+        if (parsedSourcesMemory.length === 0 && parsedGscData.length === 0 && targetKeywordsList.length === 0) {
+            throw new Error("لطفا حداقل کلمات کلیدی، فایل GSC یا کدهای HTML صفحه خودی و رقبا را وارد کنید.");
+        }
+
+        statusDiv.innerText = "📊 در حال رندر گزارش سرچ کنسول...";
+        await yieldToMain();
+        renderGscInsights(gscSection);
+
+        statusDiv.innerText = "📊 در حال محاسبه عبارات کلیدی پیشنهادی...";
+        await yieldToMain();
+        await renderTop100SuggestedKeywords(suggestedKwSection, statusDiv);
+
+        statusDiv.innerText = "🎯 در حال تحلیل شکاف کلمات کلیدی (Gap Analysis)...";
+        await yieldToMain();
+        await renderKeywordGapAnalysis(gapSection, statusDiv);
+
+        if (parsedSourcesMemory.length > 0) {
+            statusDiv.innerText = "📐 در حال ساخت ماتریس ساختاری URLها...";
+            await yieldToMain();
+            renderMegaMatrixTable(urlMatrixSection);
+
+            statusDiv.innerText = "🔤 در حال تحلیل چگالی کلمات کلیدی...";
+            await yieldToMain();
+            renderPerUrlPhraseTable(globalPerSourcePhrases, phraseResultsSection);
+        }
+
+        statusDiv.innerText = "❓ در حال تحلیل نیت کاربران (PASF & PAAF)...";
+        await yieldToMain();
+        await renderIntentAnalysisSection(intentSection);
+
+        statusDiv.innerText = "🔍 در حال استخراج شکاف‌های تفکیک‌شده...";
+        await yieldToMain();
+        await renderDetailedGapSections(detailedGapsSection, statusDiv);
+
+        statusDiv.className = "status-bar success";
+        statusDiv.style.display = "block";
+        statusDiv.innerText = `🚀 تحلیل جامع با موفقیت انجام شد! (${targetKeywordsList.length} کلمه کلیدی پردازش شد)`;
+
+    } catch (error) {
+        console.error("Workflow Error:", error);
+        statusDiv.className = "status-bar error";
+        statusDiv.style.display = "block";
+        statusDiv.innerText = "⚠️ خطا در پردازش: " + (typeof error === "string" ? error : error.message);
+    } finally {
+        startBtn.disabled = false;
+    }
+}
+
+function parseOurPageContent(inputContent) {
+    if (inputContent.includes('<') && inputContent.includes('>')) {
+        return parseHtmlDocument("صفحه وب خودی (Our Page)", inputContent);
+    } else {
+        const pureBodyText = inputContent.replace(/\s+/g, " ").trim();
+        const fullTextLower = normalizeText(pureBodyText);
+        const tokens = tokenizeText(pureBodyText);
+        return {
+            label: "صفحه وب خودی (Our Page)",
+            domain: "",
+            title: "",
+            metaDesc: "",
+            h1s: [],
+            h2s: [],
+            h3s: [],
+            headingsOutline: [],
+            altTexts: [],
+            anchorTexts: [],
+            pureBodyText,
+            fullCombinedText: pureBodyText,
+            searchableText: pureBodyText,
+            densityText: pureBodyText,
+            bodyTokens: tokens,
+            fullTextLower,
+            tokens
+        };
+    }
+}
+
+// دامنه منبع (رقیب) را به‌صورت خودکار از خود کد HTML واردشده تشخیص می‌دهد؛
+// نیازی به وارد کردن دستی دامنه توسط کاربر نیست.
+function extractDomainFromHtml(doc, rawHtml) {
+    const toHost = (rawUrl) => {
+        if (!rawUrl || !/^https?:\/\//i.test(rawUrl.trim())) return '';
+        try {
+            const host = new URL(rawUrl.trim()).hostname.replace(/^www\./i, '');
+            return host || '';
+        } catch (e) {
+            return '';
+        }
+    };
+
+    // اولویت اول: تگ‌هایی که خودِ صفحه آدرس رسمی خودش را در آن‌ها اعلام می‌کند
+    const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href');
+    let host = toHost(canonical);
+    if (host) return host;
+
+    const ogUrl = doc.querySelector('meta[property="og:url"]')?.getAttribute('content');
+    host = toHost(ogUrl);
+    if (host) return host;
+
+    const baseHref = doc.querySelector('base[href]')?.getAttribute('href');
+    host = toHost(baseHref);
+    if (host) return host;
+
+    // اولویت دوم: پرتکرارترین دامنه خارجی موجود در لینک‌های مطلق داخل کد صفحه
+    // (معمولاً همان دامنه‌ای‌ست که صفحه در لینک‌های داخلی/canonical خودش به کار می‌برد)
+    const ignoreHosts = /google|gstatic|googleapis|googletagmanager|google-analytics|doubleclick|recaptcha|facebook|fbcdn|instagram|twitter|x\.com|linkedin|youtube|youtu\.be|schema\.org|w3\.org|wp\.com|gravatar|cloudflare|jsdelivr|unpkg|bootstrapcdn|fontawesome|typekit|aparat\.com|t\.me|telegram/i;
+    const matches = rawHtml.match(/https?:\/\/[^\s"'<>)]+/g) || [];
+    const freq = new Map();
+    matches.forEach(m => {
+        const h = toHost(m);
+        if (h && !ignoreHosts.test(h)) {
+            freq.set(h, (freq.get(h) || 0) + 1);
+        }
+    });
+    if (freq.size) {
+        return Array.from(freq.entries()).sort((a, b) => b[1] - a[1])[0][0];
+    }
+
+    return '';
+}
+
+function parseHtmlDocument(label, htmlContent) {
+    // جلوگیری از چسبیدن کلمات دو تگ مجاور به هم (مثلاً </h2><p>) هنگام استخراج textContent
+    const safeHtmlContent = htmlContent.replace(/>(?=<)/g, "> ");
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(safeHtmlContent, "text/html");
+    const domain = extractDomainFromHtml(doc, htmlContent);
+
+    const title = doc.querySelector("title")?.textContent.trim() || "";
+    const metaDesc = doc.querySelector('meta[name="description"]')?.getAttribute("content")?.trim() || "";
+    const h1s = Array.from(doc.querySelectorAll("h1")).map(el => el.textContent.trim()).filter(Boolean);
+    const h2s = Array.from(doc.querySelectorAll("h2")).map(el => el.textContent.trim()).filter(Boolean);
+    const h3s = Array.from(doc.querySelectorAll("h3")).map(el => el.textContent.trim()).filter(Boolean);
+    // ساختار واقعی و سلسله‌مراتبی عناوین: همهٔ h1 تا h6 به ترتیب واقعی ظاهرشدن در سند،
+    // به همراه سطح هر عنوان (برای رندر تورفتگی/nesting صحیح در ماتریس مقایسه)
+    const headingsOutline = Array.from(doc.querySelectorAll("h1, h2, h3, h4, h5, h6"))
+        .map(el => ({ level: Number(el.tagName.substring(1)), text: el.textContent.trim() }))
+        .filter(h => h.text);
+    const altTexts = Array.from(doc.querySelectorAll("img"))
+        .map(img => img.getAttribute("alt"))
+        .filter(alt => alt && alt.trim())
+        .map(alt => alt.trim());
+    const anchorTexts = Array.from(doc.querySelectorAll("a"))
+        .map(el => el.textContent.trim())
+        .filter(Boolean);
+
+    const cleanDoc = doc.cloneNode(true);
+    cleanDoc.querySelectorAll("script, style, svg, path, iframe, nav, header, footer, noscript, link, head, dialog").forEach(el => el.remove());
+    const pureBodyText = cleanDoc.body ? cleanDoc.body.textContent.replace(/\s+/g, " ").trim() : "";
+
+    // ---------------------------------------------------------------
+    // متنِ «کاملِ قابل جست‌وجو» برای تحلیل پوشش/عدم پوشش کلمات کلیدی
+    // (هر کلمه‌ای که کاربر یا موتور جست‌وجو می‌بیند باید اینجا باشد:
+    //  متن ساده، دکمه‌ها، منو/هدر/فوتر، alt تصاویر، title/aria-label،
+    //  placeholder، value دکمه‌ها و اینپوت‌ها، option ها، متاهای مهم،
+    //  و حتی داده‌های ساختاریافته JSON-LD)
+    // ---------------------------------------------------------------
+    const searchDoc = doc.cloneNode(true);
+    // فقط چیزهایی که واقعاً محتوای زبانی ندارند حذف می‌شوند
+    searchDoc.querySelectorAll("style, svg, path, noscript").forEach(el => el.remove());
+    searchDoc.querySelectorAll("script").forEach(el => {
+        const type = (el.getAttribute("type") || "").toLowerCase();
+        // اسکریپت‌های داده‌ای (JSON-LD) حاوی متن معنادار هستند و باید بمانند
+        if (!/ld\+json|application\/json/.test(type)) el.remove();
+    });
+
+    const visibleTextAll = searchDoc.body
+        ? searchDoc.body.textContent.replace(/\s+/g, " ").trim()
+        : "";
+
+    // متن درون همهٔ اتریبیوت‌های معنادار در کل سند
+    const TEXT_ATTRS = [
+        "alt", "title", "aria-label", "aria-description", "aria-placeholder",
+        "aria-valuetext", "aria-roledescription", "placeholder", "label",
+        "value", "data-title", "data-label", "data-text", "data-tooltip",
+        "data-original-title", "data-alt", "data-caption", "summary"
+    ];
+    const attrTextParts = [];
+    searchDoc.querySelectorAll("*").forEach(el => {
+        const tag = el.tagName.toLowerCase();
+        TEXT_ATTRS.forEach(attr => {
+            if (!el.hasAttribute(attr)) return;
+            // value فقط برای عناصری که واقعاً متنِ دیده‌شده دارند (دکمه‌ها، آپشن‌ها،
+            // و اینپوت‌های متنی) — نه برای hidden/password/number
+            if (attr === "value") {
+                const type = (el.getAttribute("type") || "").toLowerCase();
+                if (tag === "input" && ["hidden", "password", "file", "checkbox", "radio"].includes(type)) return;
+                if (tag !== "input" && tag !== "button" && tag !== "option") return;
+            }
+            const v = el.getAttribute(attr);
+            if (v && v.trim() && !/^https?:\/\//i.test(v.trim())) attrTextParts.push(v.trim());
+        });
+    });
+
+    // متاهای معنادار (description، keywords، og، twitter و ...)
+    const metaTextParts = Array.from(doc.querySelectorAll("meta"))
+        .filter(m => {
+            const key = (m.getAttribute("name") || m.getAttribute("property") || m.getAttribute("itemprop") || "").toLowerCase();
+            return /description|keywords|title|og:|twitter:|subject|abstract|news_keywords/.test(key);
+        })
+        .map(m => (m.getAttribute("content") || "").trim())
+        .filter(v => v && !/^https?:\/\//i.test(v));
+
+    const searchableText = [
+        title,
+        metaDesc,
+        metaTextParts.join(" | "),
+        visibleTextAll,
+        altTexts.join(" | "),
+        anchorTexts.join(" | "),
+        attrTextParts.join(" | ")
+    ].filter(Boolean).join(" | ");
+
+    // fullCombinedText اکنون همان متن کاملِ قابل جست‌وجوست تا هیچ کلمه‌ای از قلم نیفتد
+    const fullCombinedText = searchableText;
+
+    // ---------------------------------------------------------------
+    // متن مخصوص «شمارش تکرار و چگالی» (بخش ۵)
+    // این متن با متن جست‌وجو فرق دارد: در متن جست‌وجو عمداً alt، anchor و
+    // اتریبیوت‌ها دوباره الحاق می‌شوند تا هیچ کلمه‌ای از قلم نیفتد، ولی همان
+    // تکرار مصنوعی باعث می‌شد تعداد و درصد چگالی چند برابرِ واقعیت شمرده شود
+    // (مثلاً متن یک لینک هم در visibleText بود هم در anchorTexts).
+    // اینجا هر بخش فقط یک‌بار می‌آید: Title، Meta Description، متن دیدهٔ کاربر،
+    // و alt تصاویر (که در متن دیده نمی‌شود و تکراری نیست).
+    // ---------------------------------------------------------------
+    const densityText = [
+        title,
+        metaDesc,
+        visibleTextAll,
+        altTexts.join(" | ")
+    ].filter(Boolean).join(" | ");
+
+    const fullTextLower = normalizeText(fullCombinedText);
+    const tokens = tokenizeText(fullCombinedText);
+    // توکن‌های متن اصلی بدنه (برای شمارش واقعی تعداد کلمات محتوا، نه پوشش)
+    const bodyTokens = tokenizeText(pureBodyText);
+
+    return {
+        label, domain, title, metaDesc, h1s, h2s, h3s, headingsOutline, altTexts, anchorTexts, pureBodyText, fullCombinedText,
+        searchableText, densityText, bodyTokens,
+        localTitleLower: normalizeText(title),
+        localMetaDescLower: normalizeText(metaDesc),
+        localH1sLower: h1s.map(normalizeText),
+        fullTextLower,
+        tokens
+    };
+}
+
+function phraseExists(phrase, sourceObjOrText) {
+    if (!phrase) return false;
+    
+    let phraseTokens = tokenizeText(phrase);
+    if (!phraseTokens.length) return false;
+
+    let textTokens = [];
+    if (typeof sourceObjOrText === 'object' && sourceObjOrText !== null && sourceObjOrText.tokens) {
+        textTokens = sourceObjOrText.tokens;
+    } else {
+        textTokens = tokenizeText(typeof sourceObjOrText === 'string' ? sourceObjOrText : '');
+    }
+
+    if (phraseTokens.length > textTokens.length) return false;
+
+    outer:
+    for (let i = 0; i <= textTokens.length - phraseTokens.length; i++) {
+        for (let j = 0; j < phraseTokens.length; j++) {
+            if (textTokens[i + j] !== phraseTokens[j]) continue outer;
+        }
+        return true;
+    }
+    return false;
+}
+
+function computeMultiSourceFootprintScore(phrase) {
+    const phraseNorm = normalizeText(phrase);
+    if (!phraseNorm) return { score: 0, badges: [] };
+
+    let score = 5;
+    let foundBadges = [];
+
+    if (targetKeywordsNormalizedSet.has(phraseNorm) || targetKeywordsNormalizedList.some(k => k.norm.includes(phraseNorm) || phraseNorm.includes(k.norm))) {
+        if (!foundBadges.includes('KR')) foundBadges.push('KR');
+        score += 20;
+    }
+
+    let gscMatches = [];
+    parsedGscData.forEach(g => {
+        if (g.normQuery === phraseNorm || g.normQuery.includes(phraseNorm)) {
+            gscMatches.push(g);
+        }
+    });
+
+    if (gscMatches.length > 0) {
+        if (!foundBadges.includes('GSC')) foundBadges.push('GSC');
+        score += 25 + Math.min(gscMatches.length * 5, 25);
+    }
+
+    competitorSources.forEach((comp, index) => {
+        if (phraseExists(phraseNorm, comp)) {
+            const compLabel = `C${index + 1}`;
+            if (!foundBadges.includes(compLabel)) foundBadges.push(compLabel);
+            score += 15;
+        }
+    });
+
+    if (pasfNormalizedList.some(p => p.norm === phraseNorm || p.norm.includes(phraseNorm))) {
+        if (!foundBadges.includes('PASF')) foundBadges.push('PASF');
+        score += 20;
+    }
+
+    if (paafNormalizedList.some(p => p.norm === phraseNorm || p.norm.includes(phraseNorm))) {
+        if (!foundBadges.includes('PAAF')) foundBadges.push('PAAF');
+        score += 20;
+    }
+
+    const finalScore = Math.round(score);
+    return { score: finalScore, badges: foundBadges };
+}
+
+function getBadgeHtml(b) {
+    let bClass = 'badge-comp';
+    let titleAttr = '';
+    if (b === 'Target') { bClass = 'badge-target'; titleAttr = 'در لیست تحقیق کلمات کلیدی وجود دارد'; }
+    else if (b === 'KR') { bClass = 'badge-kr'; titleAttr = 'در لیست تحقیق کلمات کلیدی (Keyword Research) وجود دارد'; }
+    else if (b === 'GSC') { bClass = 'badge-gsc'; titleAttr = 'در گزارش گوگل سرچ کنسول وجود دارد'; }
+    else if (b === 'PASF') { bClass = 'badge-pasf'; titleAttr = 'در جستجوهای مرتبط (PASF) وجود دارد'; }
+    else if (b === 'PAAF') { bClass = 'badge-paaf'; titleAttr = 'در سوالات پرتکرار کاربران (PAAF) وجود دارد'; }
+    else if (b.startsWith('C')) {
+        bClass = 'badge-' + b.toLowerCase();
+        const idx = parseInt(b.substring(1), 10) - 1;
+        const comp = competitorSources[idx];
+        titleAttr = comp ? (comp.domain ? `در صفحه رقیب: ${comp.domain}` : `در صفحه ${comp.label} وجود دارد`) : `رقیب شماره ${b.substring(1)}`;
+    }
+    return `<span class="badge ${bClass}" title="${escapeHtml(titleAttr)}">${b}</span>`;
+}
+
+function renderGscInsights(container) {
+    if (parsedGscData.length === 0) return;
+
+    const topImpressions = [...parsedGscData].sort((a, b) => b.impressions - a.impressions).slice(0, 15);
+    const topRanking = [...parsedGscData]
+        .filter(item => item.position >= 1 && item.position <= 10)
+        .sort((a, b) => b.impressions - a.impressions)
+        .slice(0, 15);
+
+    let html = `
+        <div class="card">
+            <h2>۱. تحلیل پیشرفته گوگل سرچ کنسول (GSC)</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h3 style="color: var(--primary); font-size: 1.1rem;">🔥 ۱۵ کوئری با بیشترین ایمپرشن</h3>
+                    <div class="table-responsive scrollable-table-box">
+                        <table>
+                            <thead><tr><th>Query</th><th>Impressions</th><th>Position</th></tr></thead>
+                            <tbody>
+                                ${topImpressions.map(q => `<tr><td style="direction:ltr; text-align:left;">${escapeHtml(q.query)}</td><td>${q.impressions}</td><td>${q.position}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: var(--accent-emerald); font-size: 1.1rem;">⭐ ۱۵ کوئری برتر (رتبه ۱ تا ۱۰ مرتب‌شده با ایمپرشن)</h3>
+                    <div class="table-responsive scrollable-table-box">
+                        <table>
+                            <thead><tr><th>Query</th><th>Position</th><th>Impressions</th></tr></thead>
+                            <tbody>
+                                ${topRanking.map(q => `<tr><td style="direction:ltr; text-align:left;">${escapeHtml(q.query)}</td><td>${q.position}</td><td>${q.impressions}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    container.innerHTML = html;
+}
+
+async function renderTop100SuggestedKeywords(container, statusDiv) {
+    const candidateMap = new Map();
+
+    function registerPhrase(phrase, badgeName) {
+        if (!phrase) return;
+        const norm = normalizeText(phrase);
+        if (!norm || norm.length < 2) return;
+        if (!candidateMap.has(norm)) {
+            candidateMap.set(norm, { phrase: phrase.trim(), badges: new Set() });
+        }
+        candidateMap.get(norm).badges.add(badgeName);
+    }
+
+    targetKeywordsList.forEach(k => registerPhrase(k, 'KR'));
+    parsedGscData.forEach(g => registerPhrase(g.query, 'GSC'));
+    pasfList.forEach(p => registerPhrase(p, 'PASF'));
+    paafList.forEach(p => registerPhrase(p, 'PAAF'));
+
+    const allPhrases = Array.from(candidateMap.values());
+    const chunkSize = 300;
+
+    for (let i = 0; i < allPhrases.length; i += chunkSize) {
+        const chunk = allPhrases.slice(i, i + chunkSize);
+        
+        chunk.forEach(item => {
+            const phraseNorm = normalizeText(item.phrase);
+
+            competitorSources.forEach((comp, idx) => {
+                if (phraseExists(phraseNorm, comp)) {
+                    item.badges.add(`C${idx + 1}`);
+                }
+            });
+
+            if (parsedGscData.some(g => g.normQuery.includes(phraseNorm))) {
+                item.badges.add('GSC');
+            }
+
+            if (targetKeywordsNormalizedSet.has(phraseNorm) || targetKeywordsNormalizedList.some(k => k.norm.includes(phraseNorm))) {
+                item.badges.add('KR');
+            }
+
+            if (pasfNormalizedList.some(p => p.norm.includes(phraseNorm))) item.badges.add('PASF');
+            if (paafNormalizedList.some(p => p.norm.includes(phraseNorm))) item.badges.add('PAAF');
+        });
+
+        if (allPhrases.length > 500 && statusDiv) {
+            statusDiv.innerText = `⏳ در حال ارزیابی کلمات پیشنهادی: ${Math.min(i + chunkSize, allPhrases.length)} از ${allPhrases.length}...`;
+            await yieldToMain();
+        }
+    }
+
+    const sortedCandidates = Array.from(candidateMap.values()).map(item => ({
+        phrase: item.phrase,
+        badges: Array.from(item.badges),
+        presenceCount: item.badges.size
+    })).sort((a, b) => b.presenceCount - a.presenceCount).slice(0, 100);
+
+    if (sortedCandidates.length === 0) return;
+
+    let html = `
+        <div class="card suggested-kw-card">
+            <h2 style="margin-top:0; color:var(--accent-emerald);"><span class="ai-badge" style="background:var(--accent-emerald);">📊 تحلیل حضور چندکانالی</span> ۲. ۱۰۰ کلمه و عبارت کلیدی برتر برای پوشش محتوایی</h2>
+            <p style="font-size:0.85rem; color:#047857; margin-bottom:0.5rem;">این لیست بر اساس بیشترین میزان حضور و تکرار کوئری‌ها در سکشن‌های مختلف ورودی مرتب شده است:</p>
+            <div class="suggested-kw-list scrollable-kw-list">
+                ${sortedCandidates.map((item, index) => {
+                    const badgesHtml = item.badges.map(b => getBadgeHtml(b)).join(' ');
+
+                    return `
+                        <div class="suggested-kw-item" style="flex-direction: column; align-items: flex-start; gap: 0.3rem;">
+                            <div style="display: flex; justify-content: space-between; width: 100%;">
+                                <span><strong>#${index + 1}</strong>${escapeHtml(item.phrase)}</span>
+                                <span class="suggested-score">تعداد حضور: ${item.presenceCount} سکشن</span>
+                            </div>
+                            <div>${badgesHtml}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `;
+    container.innerHTML = html;
+}
+
+async function renderKeywordGapAnalysis(container, statusDiv) {
+    let rawOurGaps = [];
+    if (ourWebpageData) {
+        rawOurGaps = targetKeywordsList.filter(kw => !phraseExists(kw, ourWebpageData));
+    } else {
+        rawOurGaps = [...targetKeywordsList];
+    }
+
+    const gapScores = [];
+    const chunkSize = 150;
+
+    for (let i = 0; i < rawOurGaps.length; i += chunkSize) {
+        const chunk = rawOurGaps.slice(i, i + chunkSize);
+        chunk.forEach(gapKw => {
+            const result = computeMultiSourceFootprintScore(gapKw);
+            gapScores.push({ phrase: gapKw, score: result.score, badges: result.badges });
+        });
+
+        if (rawOurGaps.length > 300 && statusDiv) {
+            statusDiv.innerText = `⏳ در حال محاسبه امتیاز شکاف‌ها: ${Math.min(i + chunkSize, rawOurGaps.length)} از ${rawOurGaps.length}...`;
+            await yieldToMain();
+        }
+    }
+
+    gapScores.sort((a, b) => b.score - a.score);
+    const top100Gaps = gapScores.slice(0, 100);
+
+    let html = `
+        <div class="card">
+            <h2>۳. آنالیز پیشرفته شکاف کلمات کلیدی (Keyword Gap Analysis)</h2>
+    `;
+
+    if (top100Gaps.length > 0) {
+        html += `
+            <div class="card gap-kw-card" style="margin-top: 1rem;">
+                <h3 style="margin-top:0; color:var(--accent-amber); font-size:1.15rem;"><span class="ai-badge" style="background:var(--accent-amber);">🎯 شکاف‌های استراتژیک</span> ۱۰۰ شکاف محتوایی با بالاترین اولویت تولید</h3>
+                <p style="font-size:0.85rem; color:#b45309; margin-bottom:0.5rem;">کلمات کلیدی گمشده بر اساس وزن اهمیت در منابع مختلف مرتب شده‌اند:</p>
+                <div class="suggested-kw-list scrollable-kw-list">
+                    ${top100Gaps.map((item, index) => {
+                        const badgesHtml = item.badges.map(b => getBadgeHtml(b)).join(' ');
+
+                        return `
+                            <div class="suggested-kw-item" style="border-color: var(--border-subtle); border-right: 3px solid var(--accent-amber); flex-direction: column; align-items: flex-start; gap: 0.3rem;">
+                                <div style="display: flex; justify-content: space-between; width: 100%;">
+                                    <span><strong>#${index + 1}</strong>${escapeHtml(item.phrase)}</span>
+                                    <span class="gap-score">امتیاز شکاف: ${item.score}</span>
+                                </div>
+                                <div>${badgesHtml}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+    } else {
+        html += `<p style="color:var(--accent-emerald); font-weight:bold;">هیچ شکافی یافت نشد یا داده کافی وارد نشده است.</p>`;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+function renderHeadingOutlineHtml(outline) {
+    if (!outline || !outline.length) return 'یافت نشد';
+    const items = outline.map(h => {
+        const level = Math.min(Math.max(h.level, 1), 6);
+        const indentPx = (level - 1) * 16;
+        return `<li class="heading-outline-item" style="margin-right:${indentPx}px;"><span class="heading-level-tag h${level}">H${level}</span><span class="heading-outline-text">${escapeHtml(h.text)}</span></li>`;
+    }).join('');
+    return `<ul class="heading-outline-list">${items}</ul>`;
+}
+
+function renderMegaMatrixTable(container) {
+    const sectionTitle = document.createElement('h2');
+    sectionTitle.innerText = "۴. ماتریس مقایسه ساختاری صفحه خودی و رقبا";
+    container.appendChild(sectionTitle);
+
+    const outerWrapper = document.createElement('div');
+    outerWrapper.className = 'mega-table-wrapper';
+
+    let html = `<table><thead><tr><th class="feature-corner">پارامترهای ساختاری</th>`;
+    parsedSourcesMemory.forEach(source => {
+        html += `<th class="source-column-header">${escapeHtml(source.label)}</th>`;
+    });
+    html += `</tr></thead><tbody>`;
+
+    const fields = [
+        { id: 'title', label: 'Title (عنوان صفحه)' },
+        { id: 'metaDesc', label: 'Meta Description' },
+        { id: 'headings', label: 'ساختار سلسله‌مراتبی عناوین (H1–H6)' },
+        { id: 'anchors', label: 'متن انکرتکست‌ها' },
+        { id: 'body', label: 'حجم متن بدنه' }
+    ];
+
+    fields.forEach(field => {
+        html += `<tr><td class="feature-label">${field.label}</td>`;
+        parsedSourcesMemory.forEach(source => {
+            html += `<td>`;
+            if (field.id === 'title') {
+                html += `<span style="font-weight:700;">${escapeHtml(source.title || "موجود نیست")}</span>`;
+            } else if (field.id === 'metaDesc') {
+                html += `<span>${escapeHtml(source.metaDesc || "موجود نیست")}</span>`;
+            } else if (field.id === 'headings') {
+                const outline = source.headingsOutline || [];
+                if (outline.length > 6) {
+                    html += `
+                        <div class="read-more-container">
+                            <div class="read-more-content collapsed">
+                                ${renderHeadingOutlineHtml(outline)}
+                            </div>
+                            <button class="read-more-btn" aria-expanded="false" onclick="toggleReadMore(this)">مشاهده بیشتر... 🔽</button>
+                        </div>
+                    `;
+                } else if (outline.length > 0) {
+                    html += renderHeadingOutlineHtml(outline);
+                } else {
+                    html += 'یافت نشد';
+                }
+            } else if (field.id === 'anchors') {
+                if (source.anchorTexts.length > 3) {
+                    html += `
+                        <div class="read-more-container">
+                            <div class="read-more-content collapsed">
+                                <div class="anchor-preview-box">${source.anchorTexts.map(t => `<div class="anchor-preview-line">🔗 <span>${escapeHtml(t)}</span></div>`).join('')}</div>
+                            </div>
+                            <button class="read-more-btn" aria-expanded="false" onclick="toggleReadMore(this)">مشاهده بیشتر... 🔽</button>
+                        </div>
+                    `;
+                } else if (source.anchorTexts.length > 0) {
+                    html += `<div class="anchor-preview-box">${source.anchorTexts.map(t => `<div class="anchor-preview-line">🔗 <span>${escapeHtml(t)}</span></div>`).join('')}</div>`;
+                } else {
+                    html += 'یافت نشد';
+                }
+            } else if (field.id === 'body') {
+                const actualWordCount = source.bodyTokens ? source.bodyTokens.length : tokenizeText(source.pureBodyText).length;
+                html += `<div style="color:var(--accent-emerald); font-weight:bold;">📊 ${actualWordCount} کلمه مفید</div>`;
+            }
+            html += `</td>`;
+        });
+        html += `</tr>`;
+    });
+
+    html += `</tbody></table>`;
+    outerWrapper.innerHTML = html;
+    container.appendChild(outerWrapper);
+}
+
+function getTopPhrases(text, phraseLength, topCount = 5) {
+    // نکته: قبلاً کلمات تک‌حرفی با فیلتر (w.length > 1) حذف می‌شدند و همین باعث
+    // می‌شد حروف/کلمات معتبر فارسی مانند «و» از عبارت‌ها حذف شوند و عبارت‌های
+    // شکسته و نادرست (و چگالی اشتباه) نمایش داده شود. حالا هیچ توکنی به‌خاطر
+    // کوتاه بودن حذف نمی‌شود؛ tokenizeText از قبل علائم نگارشی را کنار گذاشته است.
+    // نکته مهم دوم: عبارت‌ها نباید از روی مرزهای طبیعی متن (نقطه، ویرگول،
+    // علامت سؤال، خط جدید، و جداکنندهٔ « | » بین بخش‌های مختلف صفحه) عبور کنند.
+    // قبلاً کل متن یک رشتهٔ پیوسته فرض می‌شد و عبارت‌های بی‌معنایی مثل
+    // «تهران خرید و فروش» (آخرِ یک جمله + اولِ جملهٔ بعد) ساخته و شمرده می‌شد
+    // و همین باعث تعداد و چگالی نادرست می‌شد.
+    const segments = String(text)
+        .split(/[.!?؟،؛:()\[\]{}«»"\n\r\t|•·–—]+/)
+        .map(s => tokenizeText(s))
+        .filter(seg => seg.length);
+
+    const totalWords = segments.reduce((sum, seg) => sum + seg.length, 0);
+    if (!totalWords || totalWords < phraseLength) return [];
+
+    const phraseCounts = new Map();
+
+    // تعداد کل پنجره‌های معتبر برای این طول عبارت (مخرج درست چگالی):
+    // چگالی یعنی «این عبارت چند درصد از کل عبارت‌های هم‌طولِ متن است»
+    let totalWindows = 0;
+    segments.forEach(seg => {
+        if (seg.length >= phraseLength) totalWindows += seg.length - phraseLength + 1;
+    });
+    if (!totalWindows) return [];
+
+    segments.forEach(words => {
+        for (let i = 0; i <= words.length - phraseLength; i++) {
+            const phraseWords = words.slice(i, i + phraseLength);
+
+        // نکته: قبلاً اگر حتی یکی از کلمات داخل پنجره جزو STOP_WORDS بود،
+        // کل عبارت به‌طور کامل نادیده گرفته می‌شد. این کار عبارت‌های مهم و
+        // معنادار (که ممکن است شامل یکی از این ۹ کلمه هم باشند) را از دید
+        // کاربر پنهان می‌کرد. الان هیچ عبارتی صرفاً به‌خاطر وجود یکی از این
+        // کلمات کنار گذاشته نمی‌شود؛ همهٔ عبارت‌ها شمارش می‌شوند.
+            const phrase = phraseWords.join(" ");
+            phraseCounts.set(phrase, (phraseCounts.get(phrase) || 0) + 1);
+        }
+    });
+
+    return Array.from(phraseCounts.entries())
+        .map(([phrase, count]) => ({
+            phrase,
+            count,
+            totalWords,
+            // مخرج درست = تعداد پنجره‌های هم‌طول، نه تعداد کل کلمات.
+            // با مخرج قبلی، مثلاً یک عبارت ۶ کلمه‌ای در متنی ۱۰ کلمه‌ای
+            // چگالی ۱۰٪ می‌گرفت درحالی‌که واقعاً ۲۰٪ از پنجره‌هاست.
+            density: (count / totalWindows) * 100
+        }))
+        .sort((a, b) =>
+            b.count - a.count ||
+            b.density - a.density ||
+            a.phrase.localeCompare(b.phrase, "fa")
+        )
+        .slice(0, topCount);
+}
+
+function generateSeoBadges(phrase, sourceObj) {
+    if (!phrase || !sourceObj || !sourceObj.title) return "";
+
+    const inTitle = phraseExists(phrase, sourceObj.title);
+    const inDesc = phraseExists(phrase, sourceObj.metaDesc);
+    const inH1 = sourceObj.h1s.some(h => phraseExists(phrase, h));
+
+    let badges = "";
+    if (inTitle) badges += `<span class="seo-tag t">T</span>`;
+    if (inH1) badges += `<span class="seo-tag h1">H1</span>`;
+    if (inDesc) badges += `<span class="seo-tag md">MD</span>`;
+    return badges;
+}
+
+function formatTopPhrasesHtml(text, phraseLen, sourceObj) {
+    const topPhrases = getTopPhrases(text, phraseLen, 10);
+    if (topPhrases.length === 0) return '<span style="color:var(--text-muted)">یافت نشد</span>';
+
+    const itemsHtml = topPhrases.map(({ phrase, count, density, totalWords }) => `
+        <div class="phrase-item">
+            <div class="phrase-wrapper">
+                <span class="phrase-text">${escapeHtml(phrase)}</span>
+                ${generateSeoBadges(phrase, sourceObj)}
+            </div>
+            <span class="count-badge" title="این عبارت ${count} بار در متن تکرار شده است؛ چگالی نسبت به کل عبارت‌های ${phraseLen} کلمه‌ای متن (مجموع ${totalWords} کلمه) محاسبه شده.">${count} بار · ${density.toFixed(2)}٪</span>
+        </div>
+    `).join('');
+
+    return `<div class="phrase-scroll-box">${itemsHtml}</div>`;
+}
+
+function renderPerUrlPhraseTable(perSourcePhrases, container) {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.marginTop = "2rem";
+    div.innerHTML = `<h2>۵. ۵ عبارت کلیدی پرتکرار و چگالی واقعی آن‌ها (Title, H1, MD)</h2>`;
+    
+    let tableHtml = `
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 16%;">منبع / رقیب</th>
+                        <th>عبارات ۲ کلمه‌ای</th>
+                        <th>عبارات ۳ کلمه‌ای</th>
+                        <th>عبارات ۴ کلمه‌ای</th>
+                        <th>عبارات ۵ کلمه‌ای</th>
+                        <th>عبارات ۶ کلمه‌ای</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    for (const [label, rawText] of Object.entries(perSourcePhrases)) {
+        const sourceObj = parsedSourcesMemory.find(s => s.label === label);
+        // برای شمارش/چگالی از متن بدون تکرار مصنوعی استفاده می‌کنیم
+        // (متن جست‌وجو alt و anchor و اتریبیوت‌ها را عمداً دوباره الحاق می‌کند
+        //  و اگر همان را بشماریم تعداد تکرارها چند برابر واقعیت می‌شود)
+        const text = (sourceObj && sourceObj.densityText) ? sourceObj.densityText : rawText;
+        tableHtml += `
+            <tr>
+                <td style="font-weight:700; color:var(--text-heading);">${escapeHtml(label)}</td>
+                <td>${formatTopPhrasesHtml(text, 2, sourceObj)}</td>
+                <td>${formatTopPhrasesHtml(text, 3, sourceObj)}</td>
+                <td>${formatTopPhrasesHtml(text, 4, sourceObj)}</td>
+                <td>${formatTopPhrasesHtml(text, 5, sourceObj)}</td>
+                <td>${formatTopPhrasesHtml(text, 6, sourceObj)}</td>
+            </tr>
+        `;
+    }
+
+    tableHtml += `</tbody></table></div>`;
+    div.innerHTML += tableHtml;
+    container.appendChild(div);
+}
+
+async function renderIntentAnalysisSection(container) {
+    if (pasfList.length === 0 && paafList.length === 0) return;
+
+    const sortedPasf = pasfList.map(p => {
+        const res = computeMultiSourceFootprintScore(p);
+        return { text: p, score: res.score, badges: res.badges };
+    }).sort((a, b) => b.score - a.score);
+
+    const sortedPaaf = paafList.map(q => {
+        const res = computeMultiSourceFootprintScore(q);
+        return { text: q, score: res.score, badges: res.badges };
+    }).sort((a, b) => b.score - a.score);
+
+    const mapToListHtml = (items) => items.map(item => {
+        const badgesHtml = item.badges.map(b => getBadgeHtml(b)).join(' ');
+
+        return `
+            <li style="margin-bottom:0.6rem; display: flex; flex-direction: column; gap: 0.2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>${escapeHtml(item.text)}</span>
+                    <span class="count-badge">امتیاز: ${item.score}</span>
+                </div>
+                <div>${badgesHtml}</div>
+            </li>
+        `;
+    }).join('');
+
+    let html = `
+        <div class="card" style="margin-top: 2rem;">
+            <h2>۶. جستجوهای مرتبط و سوالات پرتکرار کاربران (PASF & PAAF)</h2>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">مرتب‌شده بر اساس میزان تکرار و هم‌پوشانی:</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                ${sortedPasf.length ? `
+                    <div>
+                        <h3 style="color:var(--accent-sky);">🔍 جستجوهای مرتبط (PASF)</h3>
+                        ${sortedPasf.length > 5 ? `
+                            <div class="read-more-container">
+                                <div class="read-more-content collapsed">
+                                    <ul>${mapToListHtml(sortedPasf)}</ul>
+                                </div>
+                                <button class="read-more-btn" aria-expanded="false" onclick="toggleReadMore(this)">مشاهده بیشتر... 🔽</button>
+                            </div>
+                        ` : `<ul>${mapToListHtml(sortedPasf)}</ul>`}
+                    </div>
+                ` : ''}
+                ${sortedPaaf.length ? `
+                    <div>
+                        <h3 style="color:var(--accent-amber);">❓ سوالات پرتکرار (PAAF)</h3>
+                        ${sortedPaaf.length > 5 ? `
+                            <div class="read-more-container">
+                                <div class="read-more-content collapsed">
+                                    <ul>${mapToListHtml(sortedPaaf)}</ul>
+                                </div>
+                                <button class="read-more-btn" aria-expanded="false" onclick="toggleReadMore(this)">مشاهده بیشتر... 🔽</button>
+                            </div>
+                        ` : `<ul>${mapToListHtml(sortedPaaf)}</ul>`}
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+    container.innerHTML = html;
+}
+
+function renderOurGapBadgesHtml(items) {
+    return items.map(item => {
+        const badgesHtml = item.badges.map(b => getBadgeHtml(b)).join(' ');
+        return `
+            <div style="background: var(--bg-neutral-light); border: 1px solid var(--border-subtle); border-right: 3px solid var(--accent-rose); color: #991b1b; padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; display: inline-flex; flex-direction: column; gap: 0.2rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                    <span>${escapeHtml(item.phrase)}</span>
+                    <span style="font-size: 0.72rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); color: #881337; padding: 0.1rem 0.38rem; border-radius: 4px;">امتیاز: ${item.score}</span>
+                </div>
+                <div>${badgesHtml}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderCompGapBadgesHtml(items) {
+    return items.map(item => {
+        const badgesHtml = item.badges.map(b => getBadgeHtml(b)).join(' ');
+        return `
+            <div style="background: var(--bg-neutral-light); border: 1px solid var(--border-subtle); border-right: 3px solid var(--accent-amber); color: #92400e; padding: 0.35rem 0.7rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 600; display: inline-flex; flex-direction: column; gap: 0.2rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
+                    <span>${escapeHtml(item.phrase)}</span>
+                    <span class="comp-gap-score">امتیاز: ${item.score}</span>
+                </div>
+                <div>${badgesHtml}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// این تابع هم‌زمان روی شکاف‌های صفحه خودی و شکاف‌های تمام رقبا جستجو و فیلتر انجام می‌دهد
+function filterAllGapSections(query = "") {
+    const normQuery = normalizeText(query);
+    const noResultHtml = `<span style="color:var(--accent-rose); font-weight:600; font-size:0.85rem;">هیچ کلمه‌ای با عبارت جستجو شده یافت نشد.</span>`;
+
+    // بخش صفحه خودی
+    const ourContainer = document.getElementById("our-gaps-badge-container");
+    const ourCountSpan = document.getElementById("our-gaps-count");
+    if (ourContainer) {
+        const filteredOur = rawCalculatedOurGaps.filter(item => !normQuery || normalizeText(item.phrase).includes(normQuery));
+        if (ourCountSpan) ourCountSpan.innerText = filteredOur.length;
+        ourContainer.innerHTML = filteredOur.length ? renderOurGapBadgesHtml(filteredOur) : noResultHtml;
+    }
+
+    // بخش تمام رقبا
+    rawCalculatedCompGapsList.forEach(({ containerId, countId, gaps }) => {
+        const compContainer = document.getElementById(containerId);
+        const compCountSpan = document.getElementById(countId);
+        if (!compContainer) return;
+
+        const filteredComp = gaps.filter(item => !normQuery || normalizeText(item.phrase).includes(normQuery));
+        if (compCountSpan) compCountSpan.innerText = filteredComp.length;
+        compContainer.innerHTML = filteredComp.length ? renderCompGapBadgesHtml(filteredComp) : noResultHtml;
+    });
+}
+
+function clearOurPageGapSearch() {
+    const input = document.getElementById("our-gap-search-input");
+    if (input) {
+        input.value = "";
+        filterAllGapSections("");
+    }
+}
+
+async function renderDetailedGapSections(container, statusDiv) {
+    if (!ourWebpageData && competitorSources.length === 0) return;
+    rawCalculatedCompGapsList = [];
+
+    let html = `
+        <div class="card" style="margin-top: 2rem;">
+            <h2>۷. شکاف‌های تفکیک‌شده صفحه خودی و رقبا (Detailed Gap Analysis)</h2>
+    `;
+
+    if (ourWebpageData) {
+        const rawOurGaps = targetKeywordsList.filter(kw => !phraseExists(kw, ourWebpageData));
+        rawCalculatedOurGaps = [];
+        
+        const chunkSize = 200;
+        for (let i = 0; i < rawOurGaps.length; i += chunkSize) {
+            const chunk = rawOurGaps.slice(i, i + chunkSize);
+            chunk.forEach(kw => {
+                const res = computeMultiSourceFootprintScore(kw);
+                rawCalculatedOurGaps.push({ phrase: kw, score: res.score, badges: res.badges });
+            });
+            if (rawOurGaps.length > 500 && statusDiv) {
+                statusDiv.innerText = `⏳ در حال محاسبه شکاف‌های صفحه خودی: ${Math.min(i + chunkSize, rawOurGaps.length)} از ${rawOurGaps.length}...`;
+                await yieldToMain();
+            }
+        }
+
+        rawCalculatedOurGaps.sort((a, b) => b.score - a.score);
+
+        const ourGapsBadges = renderOurGapBadgesHtml(rawCalculatedOurGaps);
+
+        html += `
+            <div style="background: var(--bg-neutral-light); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom:1.5rem;">
+                <h3 style="color: var(--text-heading); margin-top:0;">📌 تمام شکاف‌های کلمات کلیدی صفحه خودی (<span id="our-gaps-count">${rawCalculatedOurGaps.length}</span> مورد)</h3>
+                
+                <div class="gap-search-container" id="gap-search-box-wrapper">
+                    <span style="font-size:1rem;">🔍</span>
+                    <input type="text" id="our-gap-search-input" class="gap-search-input" placeholder="جستجو بین شکاف‌های کلمات کلیدی (خودی و همه رقبا)..." oninput="filterAllGapSections(this.value)">
+                    <button type="button" style="min-width:auto; width:auto; padding:0.4rem 0.8rem; font-size:0.8rem; background:var(--bg-neutral-light); color:var(--text-body); border:1px solid var(--border-subtle);" onclick="clearOurPageGapSearch()">پاک‌سازی</button>
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.3rem 0 0;">این جستجو هم‌زمان روی شکاف‌های صفحه خودی و شکاف‌های تمام رقبا اعمال می‌شود.</p>
+
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin:0.25rem 0 0.5rem 0;">لیست کامل کلمات هدف که در صفحه خودی یافت نشدند:</p>
+                <div class="scrollable-box-5items" style="margin-top: 0.5rem;">
+                    <div id="our-gaps-badge-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        ${rawCalculatedOurGaps.length ? ourGapsBadges : '<span style="color:var(--accent-emerald); font-weight:600;">عالی! تمام کلمات هدف در صفحه شما به کار رفته‌اند.</span>'}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    if (competitorSources.length > 0) {
+        html += `<h3 style="color: var(--text-heading); margin-top: 1rem;">👥 شکاف کلمات رقبا با لیست تحقیق کلمات</h3>`;
+        for (let compIdx = 0; compIdx < competitorSources.length; compIdx++) {
+            const comp = competitorSources[compIdx];
+            const rawCompGaps = targetKeywordsList.filter(kw => !phraseExists(kw, comp));
+            
+            const sortedCompGaps = [];
+            const chunkSize = 200;
+            for (let i = 0; i < rawCompGaps.length; i += chunkSize) {
+                const chunk = rawCompGaps.slice(i, i + chunkSize);
+                chunk.forEach(kw => {
+                    const res = computeMultiSourceFootprintScore(kw);
+                    sortedCompGaps.push({ phrase: kw, score: res.score, badges: res.badges });
+                });
+                if (rawCompGaps.length > 500 && statusDiv) {
+                    statusDiv.innerText = `⏳ در حال محاسبه شکاف‌های ${comp.label}: ${Math.min(i + chunkSize, rawCompGaps.length)} از ${rawCompGaps.length}...`;
+                    await yieldToMain();
+                }
+            }
+
+            sortedCompGaps.sort((a, b) => b.score - a.score);
+
+            const containerId = `comp-gaps-badge-container-${compIdx}`;
+            const countId = `comp-gaps-count-${compIdx}`;
+
+            rawCalculatedCompGapsList.push({ containerId, countId, gaps: sortedCompGaps });
+
+            const compGapsBadges = renderCompGapBadgesHtml(sortedCompGaps);
+
+            html += `
+                <div style="margin-top: 1rem; background: var(--bg-neutral-light); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                        <strong>${escapeHtml(comp.label)} (تعداد شکاف‌ها: <span id="${countId}">${sortedCompGaps.length}</span>):</strong>
+                    </div>
+                    <div class="scrollable-box-5items" style="margin-top: 0.5rem;">
+                        <div id="${containerId}" style="display: flex; flex-wrap: wrap; gap: 0.45rem;">
+                            ${sortedCompGaps.length ? compGapsBadges : '<span style="color:var(--text-muted); font-size:0.85rem;">این رقیب تمامی کلمات کلیدی هدف را پوشش داده است.</span>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f9192f1c94c3f1',t:'MTc5MDE2MTc3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
